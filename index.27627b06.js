@@ -1,0 +1,2 @@
+const e=e=>fetch(`https://restcountries.com/v2/name/${e}`).then((e=>{if(!e.ok)throw new Error(e.status);return e.json()}));({cityInputEl:document.querySelector("#search-box")}).cityInputEl.addEventListener("input",(t=>{t.preventDefault(),console.log(t.currentTarget.value);const o=t.currentTarget.value;e(o).then((e=>{console.log(e)})).catch((e=>{console.log(err)})),console.log(o)}));
+//# sourceMappingURL=index.27627b06.js.map
