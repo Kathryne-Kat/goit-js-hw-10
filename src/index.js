@@ -2,7 +2,8 @@ import './css/styles.css';
 import { fetchCity } from './fetchCountries.js';
 
 const refs = {
-    cityInputEl:document.querySelector('#search-box'),
+    cityInputEl: document.querySelector('#search-box'),
+    countryMarkup: document.querySelector('.country-list'),
 }
 
 //console.log(refs.cityInputEl.elements);
@@ -27,3 +28,12 @@ const onCityInputEl = e => {
 };
 
 refs.cityInputEl.addEventListener('input', onCityInputEl);
+
+const criateCountriMarkup = (data) => {
+    return `<img src="data." alt="">
+<h2>title</h2>
+<div>Capital</div>
+<div>Population</div>
+<div>Languages</div>`
+    
+}
