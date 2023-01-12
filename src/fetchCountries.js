@@ -1,5 +1,5 @@
 export const fetchCity = cityName => { 
-    return fetch(`https://restcountries.com/v2/name/${cityName}`
+    return fetch(`https://restcountries.com/v2/name/${cityName}?fields=name,capital,population,flag,languages`
     ).then(res => {
         //console.log(res);
         if (!res.ok) {
@@ -9,6 +9,9 @@ export const fetchCity = cityName => {
         return res.json();
     });
 };
+//https://restcountries.com/v2/{service}?fields={field},{field},{field}
+//https://restcountries.com/v2/all?fields=name,capital,currencies
+
 
 //fetchCity(peru)
 //,capital,population,flags.svg,lenguages
