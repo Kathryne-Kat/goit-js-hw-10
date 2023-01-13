@@ -1,5 +1,5 @@
 import './css/styles.css';
-import { fetchCity } from './fetchCountries.js';
+import { fetchCountry } from './fetchCountries'
 import Notiflix from 'notiflix';
 import debounce from 'lodash.debounce';
 
@@ -12,7 +12,7 @@ const refs = {
 const DEBOUNCE_DELAY = 300;
 
 function createCountryMarkup(cardInfo) {
-    //console.log(cardInfo.length);
+    console.log(cardInfo.length);
 
     if (cardInfo.length < 10 && cardInfo.length >= 2) {
         const markupList = cardInfo
@@ -54,9 +54,8 @@ const onCountryInputEl=(e) =>{
 
     const countryName = e.target.value.trim();   
 
-    fetchCity(countryName)
+    fetchCountry(countryName)
         .then(data => {
-            //console.log(data);            
             createCountryMarkup(data)
         })
 
@@ -67,8 +66,7 @@ const onCountryInputEl=(e) =>{
             if (countryName) {
                 Notiflix.Notify.failure('Oops, there is no country with that name');
             }           
-        });
-    //console.log(countryName);
+        });   
 }
 
 refs.countryInputEl.addEventListener('input', debounce(onCountryInputEl, DEBOUNCE_DELAY));
