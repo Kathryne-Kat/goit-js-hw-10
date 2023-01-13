@@ -1,74 +1,74 @@
 import './css/styles.css';
 import { fetchCity } from './fetchCountries.js';
 import Notiflix from 'notiflix';
-//import { debounce } from 'lodash';
-//import debounce from 'lodash.debounce';
-import throttle from 'lodash.throttle';
+import debounce from 'lodash.debounce';
 
 const refs = {
-    cityInputEl: document.querySelector('#search-box'),
-    countryCard: document.querySelector('.country-list'),
+    countryInputEl: document.querySelector('#search-box'),
+    countryList: document.querySelector('.country-list'),
+    countryCard: document.querySelector('.country-info'),
 }
 
-//console.log(refs.cityInputEl.elements);
 const DEBOUNCE_DELAY = 300;
 
 function createCountryMarkup(cardInfo) {
-    console.log(cardInfo.length );
-    if (cardInfo.length < 2) {
-    const langName = cardInfo.flatMap(el => el.languages)
-        .map(len=>len.name);
-    //console.log(langName);
-    return cardInfo        
-        .flatMap(({ flag, name, capital, population, languages }) => {
-            return `<li><div><img src="${flag}" width=40 alt="flag">
+    //console.log(cardInfo.length);
+
+    if (cardInfo.length < 10 && cardInfo.length >= 2) {
+        const markupList = cardInfo
+            .map(({ flags:{svg}, name }) => {
+                return `<li style="margin-bottom: 10px">
+                            <img src="${svg}" width=40 alt="flag ">  
+                            <span style="font-size: 16px; margin-left: 8px">${name}</span>
+                        </li>`;
+            })
+            .join(''); 
+        refs.countryCard.innerHTML = '';
+        return refs.countryList.innerHTML = markupList;
+    }
+    
+    else if (cardInfo.length < 2) {
+        const langName = cardInfo.flatMap(el => el.languages).map(el=>el.name);
+    
+        const markupCard = cardInfo        
+            .map(({ flags:{svg}, name, capital, population }) => {
+            return `<div><img src="${svg}" width=40 alt="flag">
                 <span style="font-size: 30px; font-weight: 700;">${name}</span></div>
-                <div><b>Capital:</b> ${capital}</div>
-                <div><b>Population:</b> ${population}</div>
-                <div><b>Languages:</b> ${langName}</div></li>`;
+                <p><b>Capital: </b> ${capital}</p>
+                <p><b>Population: </b> ${population}</p>
+                <p><b>Languages: </b> ${langName}</p>`;
         })
             .join(''); 
-        
-}
-    else if (cardInfo.length < 10 && cardInfo.length >= 2) {
-        return cardInfo        
-        .flatMap(({ flag, name }) => {
-            return `<li><div><img src="${flag}" width=30 alt="flag">
-                <span style="font-size: 16px; font-weight: 400;">${name}</span></div>
-                `;
-        })
-            .join(''); 
+        refs.countryList.innerHTML = '';
+        return refs.countryCard.innerHTML = markupCard;
     }
+
     else {
+        refs.countryList.innerHTML = '';        
         Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
-    }
-       
+    }       
 }   
-//console.log(createCountryMarkup);
-function onCityInputEl(e) {
+
+const onCountryInputEl=(e) =>{
     e.preventDefault();
 
-    //console.log(e.currentTarget.value);
-    const cityName = e.currentTarget.value.trim();
+    const countryName = e.target.value.trim();   
 
-    fetchCity(cityName)
+    fetchCity(countryName)
         .then(data => {
-            console.log(data);
-            refs.countryCard.innerHTML = createCountryMarkup(data);
+            //console.log(data);            
+            createCountryMarkup(data)
         })
+
         .catch(err => {
             console.log(err);
-            Notiflix.Notify.failure('Oops, there is no country with that name');
+            refs.countryList.innerHTML = ''; 
+            refs.countryCard.innerHTML = '';
+            if (countryName) {
+                Notiflix.Notify.failure('Oops, there is no country with that name');
+            }           
         });
-    console.log(cityName);
+    //console.log(countryName);
 }
 
-refs.cityInputEl.addEventListener('input', onCityInputEl);
-
-// Notiflix.Notify.success('Sol lucet omnibus');
-
-// Notiflix.Notify.failure('Qui timide rogat docet negare');
-
-// Notiflix.Notify.warning('Memento te hominem esse');
-
-// Notiflix.Notify.info('Cogito ergo sum');
+refs.countryInputEl.addEventListener('input', debounce(onCountryInputEl, DEBOUNCE_DELAY));
